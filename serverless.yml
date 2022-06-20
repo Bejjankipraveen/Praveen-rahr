@@ -1,0 +1,56 @@
+service: academy-microservices
+
+provider:
+    name: aws
+    # The AWS region in which to deploy (us-east-1 is the default)
+    region: ca-central-1
+    # The stage of the application, e.g. dev, production, staging… ('dev' is the default)
+    stage: qa
+    runtime: provided.al2
+    #environment:
+        #BREF_AUTOLOAD_PATH: '/opt/vendor/autoload.php'
+package:
+    # Directories to exclude from deployment
+    exclude:
+        - node_modules/**
+        #- public/storage
+        #- resources/assets/**
+        #- storage/**
+        - tests/**
+        #- vendor/**
+    include:
+        - storage/oauth-private.key
+        - storage/oauth-public.key
+
+functions:
+    # This function runs the Laravel website/API
+    web:
+        handler: public/index.php
+        timeout: 28 # in seconds (API Gateway has a timeout of 29 seconds)
+        layers:
+            - ${bref:layer.php-80-fpm}
+            #- !Sub arn:aws:lambda:ca-central-1:839647322116:layer:vendor_layer_2:1
+        events:
+            -   httpApi: '*'
+                #path: '/api/v1/users/view-profile/2'
+                #method: ANY
+                #cors: true
+        #vpc:
+            #securityGroupIds:
+            #    -  sg-0aa48f6931f93d14b
+            #subnetIds:
+            #    - subnet-07fa05d194f3a4a16
+            #    - subnet-086b228cfdebd9d6b
+            #    - subnet-08673cbf9eeb3ecf7
+    # This function lets us run artisan commands in Lambda
+    #artisan:
+    #    handler: artisan
+    #    timeout: 120 # in seconds
+    #    layers:
+    #        - ${bref:layer.php-80} # PHP
+    #        - ${bref:layer.console} # The "console" layer
+
+plugins:
+    # We need to include the Bref plugin
+    #- ./../../../opt/vendor/bref/bref
+    - ./vendor/bref/bref
