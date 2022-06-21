@@ -11,10 +11,9 @@ phases:
       - npm install -g serverless
       - cp -r config/.env.example .env
       - composer install --ignore-platform-reqs --optimize-autoloader --no-dev
-      - php artisan l5-swagger:generate
-      - php artisan cache:clear
-      - php artisan config:cache
       - php artisan view:clear
+      - php artisan cache:clear
+      - php artisan config:clear
       - php artisan route:clear
       - serverless deploy
 

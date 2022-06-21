@@ -1,11 +1,11 @@
-service: academy-microservices
+service: example-app-microservices
 
 provider:
     name: aws
     # The AWS region in which to deploy (us-east-1 is the default)
     region: ca-central-1
     # The stage of the application, e.g. dev, production, staging… ('dev' is the default)
-    stage: qa
+    stage: dev
     runtime: provided.al2
     #environment:
         #BREF_AUTOLOAD_PATH: '/opt/vendor/autoload.php'
@@ -19,8 +19,8 @@ package:
         - tests/**
         #- vendor/**
     include:
-        - storage/oauth-private.key
-        - storage/oauth-public.key
+        #- storage/oauth-private.key
+        #- storage/oauth-public.key
 
 functions:
     # This function runs the Laravel website/API
@@ -32,6 +32,8 @@ functions:
             #- !Sub arn:aws:lambda:ca-central-1:839647322116:layer:vendor_layer_2:1
         events:
             -   httpApi: '*'
+            #-   http: 'ANY /'
+            #-   http: 'ANY /{proxy+}'
                 #path: '/api/v1/users/view-profile/2'
                 #method: ANY
                 #cors: true
